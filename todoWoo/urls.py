@@ -21,9 +21,12 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     # auth
-    path('signup/', views.signupUser),
+    path('signup/', views.signupUser, name='signup'),
+    path('logout/', views.logoutUser, name='logout'),
+    path('login/', views.loginUser, name='login'),
 
     #todo
-    path('current/', views.currentTodo),
+    path('current/', views.currentTodo, name='current'),
+    path('', views.home, name='home'),
 
 ]
