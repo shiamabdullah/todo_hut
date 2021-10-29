@@ -4,6 +4,9 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.contrib.auth import login, logout, authenticate
+
+from todo.models import Todo
+from .forms import TodoForm
 # Create your views here.
 ##home
 def home(request):
@@ -50,4 +53,19 @@ def loginUser(request):
 
 def currentTodo(request):
     return render(request, 'todo/currenttodos.html', {'form': UserCreationForm()})
+
+def createTodo(request):
+    if request.method == 'GET':
+        return render(request, 'todo/createtodo.html', {'form': TodoForm()})
+    else:
+        try:
+            form = TodoForm(request.POST)
+            newTodo = form.save(commit=False) #creating newTOdo and commit false ensures it doesn't go to db
+            newTodo.todoCreator = request.user #registering to the user
+            newTodo.save()
+            return redirect('current')        
+        except ValueError:
+            return render(request, 'todo/createtodo.html', {'form': TodoForm(), 'error':'Value Error. Try again'})
+
+
 
