@@ -71,4 +71,14 @@ def createTodo(request):
 
 def viewTodo(request, id):
     todo = get_object_or_404(Todo, pk=id)
-    return render(request, 'todo/viewtodos.html', {'todo': todo})
+    if request.method == 'GET':
+        form = TodoForm(instance=todo)
+        return render(request, 'todo/viewtodos.html', {'todo': todo, 'form':form})
+    else:
+        try:
+            form = TodoForm(request.POST, instance=todo) #send the instance as well as it contains the user_field it points to the obj
+            form.save()
+            return redirect(currentTodo)
+
+        except ValueError:
+            return render(request, 'todo/viewtodos.html', {'todo': todo, 'form':form, 'error': 'value error'})
