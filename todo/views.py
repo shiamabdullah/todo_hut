@@ -1,10 +1,9 @@
 from django.contrib import auth
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.contrib.auth import login, logout, authenticate
-
 from todo.models import Todo
 from .forms import TodoForm
 # Create your views here.
@@ -52,7 +51,8 @@ def loginUser(request):
             
 
 def currentTodo(request):
-    return render(request, 'todo/currenttodos.html', {'form': UserCreationForm()})
+    todos = Todo.objects.filter(todoCreator= request.user, completedAt__isnull=True)
+    return render(request, 'todo/currenttodos.html', {'todos': todos})
 
 def createTodo(request):
     if request.method == 'GET':
@@ -69,3 +69,6 @@ def createTodo(request):
 
 
 
+def viewTodo(request, id):
+    todo = get_object_or_404(Todo, pk=id)
+    return render(request, 'todo/viewtodos.html', {'todo': todo})
