@@ -1,1 +1,19 @@
-{% extends 'todo/base.html' %} {% block content%} current {% endblock %}
+{% extends 'todo/base.html' %} {% block content%} current
+
+<ul>
+  {% for todo in todos %} {% if todo.important %}
+  <b>
+    {% endif %}
+    
+    <li><a href="{% url 'view' todo.pk %}">{{todo.title}}</a>
+    {% if todo.important %}
+  </b>
+  {% endif %}
+  {% if todo.memo %}
+      - {{todo.memo}}
+      
+  {% endif %} 
+</li>
+  {% endfor %}
+</ul>
+{% endblock %}
