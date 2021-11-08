@@ -5,7 +5,7 @@
   <b>
     {% endif %}
     
-    <li><a href="{% url 'view' todo.pk %}">{{todo.title}}</a>
+    <li><a href="{% url 'viewTodo' todo.pk %}">{{todo.title}}</a>
     {% if todo.important %}
   </b>
   {% endif %}
