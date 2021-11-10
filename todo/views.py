@@ -6,6 +6,7 @@ from django.db import IntegrityError
 from django.contrib.auth import login, logout, authenticate
 from todo.models import Todo
 from .forms import TodoForm
+from django.utils import timezone
 # Create your views here.
 ##home
 def home(request):
@@ -67,13 +68,26 @@ def createTodo(request):
         except ValueError:
             return render(request, 'todo/createtodo.html', {'form': TodoForm(), 'error':'Value Error. Try again'})
 
+def completeTodo(request, id):
+    todo = get_object_or_404(Todo, pk=id, todoCreator=request.user)
+    if request.method == 'POST':
+        todo.completedAt = timezone.now()
+        todo.save()
+        return redirect ('current')
+
+def deleteTodo(request, id):
+    todo = get_object_or_404(Todo, pk=id, todoCreator=request.user)
+    if request.method == 'POST':
+        todo.completedAt = timezone.now()
+        todo.save()
+        return redirect ('current')    
 
 
 def viewTodo(request, id):
     todo = get_object_or_404(Todo, pk=id, todoCreator=request.user)
     if request.method == 'GET':
         form = TodoForm(instance=todo)
-        return render(request, 'todo/viewtodos.html', {'todo': todo, 'form':form})
+        return render(request, 'todo/viewtodo.html', {'todo': todo, 'form':form})
     else:
         try:
             form = TodoForm(request.POST, instance=todo) #send the instance as well as it contains the user_field it points to the obj
@@ -81,4 +95,4 @@ def viewTodo(request, id):
             return redirect(currentTodo)
 
         except ValueError:
-            return render(request, 'todo/viewtodos.html', {'todo': todo, 'form':form, 'error': 'value error'})
+            return render(request, 'todo/viewtodo.html', {'todo': todo, 'form':form, 'error': 'value error'})
