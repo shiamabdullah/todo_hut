@@ -18,7 +18,7 @@
     />
 
     <link rel="icon" type="image/png" href="{% static 'todo/logo.png' %}" />
-    <title>Todo Woo</title>
+    <title>Todo Hut</title>
   </head>
   <body>
     <nav class="navbar navbar-expand-md navbar-light bg-warning">
@@ -30,7 +30,7 @@
             height="30"
             class="d-inline-block align-top"
           />
-          <span>Todo Woo</span>
+          <span>Todo Hut</span>
         </a>
         <button
           class="navbar-toggler"
@@ -50,7 +50,7 @@
               <a class="nav-link" href="{% url 'current' %}">Current</a>
             </li>
             <li class="nav-item {{ completed }}">
-              <a class="nav-link" href="">Completed</a>
+              <a class="nav-link" href="{% url 'completedTodo' %}">Completed</a>
             </li>
             <li class="nav-item {{ create }}">
               <a class="nav-link" href="{% url 'create' %}">Create</a>

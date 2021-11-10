@@ -7,6 +7,7 @@ from django.contrib.auth import login, logout, authenticate
 from todo.models import Todo
 from .forms import TodoForm
 from django.utils import timezone
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 ##home
 def home(request):
@@ -32,6 +33,7 @@ def signupUser(request):
             return render(request, 'todo/signupuser.html', {'form': UserCreationForm(), 'error': "Passwords didn't match"})
             #tell pass not match
 
+@login_required
 def logoutUser(request):
     if request.method == 'POST':
         logout(request)
@@ -50,11 +52,12 @@ def loginUser(request):
             login(request, user)
             return redirect('current')        
             
-
+@login_required
 def currentTodo(request):
     todos = Todo.objects.filter(todoCreator= request.user, completedAt__isnull=True)
     return render(request, 'todo/currenttodos.html', {'todos': todos})
 
+@login_required
 def createTodo(request):
     if request.method == 'GET':
         return render(request, 'todo/createtodo.html', {'form': TodoForm()})
@@ -68,6 +71,7 @@ def createTodo(request):
         except ValueError:
             return render(request, 'todo/createtodo.html', {'form': TodoForm(), 'error':'Value Error. Try again'})
 
+@login_required
 def completeTodo(request, id):
     todo = get_object_or_404(Todo, pk=id, todoCreator=request.user)
     if request.method == 'POST':
@@ -75,14 +79,14 @@ def completeTodo(request, id):
         todo.save()
         return redirect ('current')
 
+@login_required
 def deleteTodo(request, id):
     todo = get_object_or_404(Todo, pk=id, todoCreator=request.user)
     if request.method == 'POST':
-        todo.completedAt = timezone.now()
-        todo.save()
+        todo.delete()
         return redirect ('current')    
 
-
+@login_required
 def viewTodo(request, id):
     todo = get_object_or_404(Todo, pk=id, todoCreator=request.user)
     if request.method == 'GET':
@@ -96,3 +100,8 @@ def viewTodo(request, id):
 
         except ValueError:
             return render(request, 'todo/viewtodo.html', {'todo': todo, 'form':form, 'error': 'value error'})
+
+@login_required
+def completedTodo(request):
+    todos = Todo.objects.filter(todoCreator= request.user, completedAt__isnull=False).order_by('-completedAt')
+    return render(request, 'todo/completedtodos.html', {'todos': todos})

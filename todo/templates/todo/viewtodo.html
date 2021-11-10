@@ -34,12 +34,9 @@
           name="important"
           class="form-check-input"
           id="important"
-          {%
-          if
-          todo.important
-          %}checked{%
-          endif
-          %}
+          {% if todo.important %}
+          checked
+          {%endif%}
         />
         <label class="form-check-label" for="important">Important</label>
       </div>
@@ -71,7 +68,11 @@
   <button id="complete" type="submit">Complete</button>
 </form>
 {% endif %}
-<form style="display: none" method="POST" action="">
+<form
+  style="display: none"
+  method="POST"
+  action="{% url 'deleteTodo' todo.id %}"
+>
   {% csrf_token %}
   <button id="delete" type="submit">Delete</button>
 </form>

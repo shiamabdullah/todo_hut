@@ -16,13 +16,10 @@
       <a
         href="{% url 'viewTodo' todo.id %}"
         class="
-          list-group-item list-group-item-action{%
-          if
-          todo.important
-          %}
-          list-group-item-danger{%
-          endif
-          %}
+          list-group-item list-group-item-action
+          {% if todo.important %}
+          list-group-item-success
+          {% endif %}
         "
         ><b>{{ todo.title }}</b> {% if todo.memo %} - {{ todo.memo }} </a
       >{% endif %} {% endfor %}
